@@ -17,6 +17,9 @@ data class Topic(
 
     val description: String = "",
 
-    @ManyToMany(mappedBy = "topics")
-    val posts: List<Post> = mutableListOf()
+    @ManyToMany(mappedBy = "topicEntities")
+    val postEntities: List<Post> = mutableListOf(),
+
+    @OneToMany(mappedBy = "topic", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var subscriptions: List<UserTopicSubscription> = mutableListOf()
 )
