@@ -28,8 +28,7 @@ class BroadcastService(
         // Extract the users from the subscriptions, removing duplicates
         subscriptions.map { it.user }.distinct().forEach {
             println(it.email)
-            mailService.send("COALARM <coalarm@hufsdevelopers.org>", it.email, post.title, EmailTemplate.generate(post.title, post.content))
+            mailService.send("COALARM <coalarm@hufsdevelopers.org>", it.email, post.title, EmailTemplate.generate(post.title, post.content.replace("\n", "<br/>").replace(" ", "&nbsp;")))
         }
-
     }
 }
