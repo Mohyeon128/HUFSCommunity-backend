@@ -1,5 +1,6 @@
 package com.mohyeon128.community.services
 
+import com.mohyeon128.community.datas.tables.Topic
 import com.mohyeon128.community.datas.tables.UserTopicSubscription
 import com.mohyeon128.community.repositories.TopicJpaRepository
 import com.mohyeon128.community.repositories.UserJpaRepository
@@ -30,5 +31,11 @@ class SubscriptionService(
         val topic = topicRepository.findById(topicId)
             .orElseThrow { NoSuchElementException("Topic with ID $topicId not found") }
         userTopicSubscriptionRepository.deleteByUserAndTopic(user, topic)
+    }
+
+    @Transactional
+    fun getUserSubscriptions(userId: Long): List<Topic> {
+        return userTopicSubscriptionRepository.findByUserId(userId)
+            .map { it.topic }
     }
 }

@@ -1,19 +1,18 @@
 package com.mohyeon128.community.controller
 
 import com.mohyeon128.community.datas.requestforms.UserRegistForm
+import com.mohyeon128.community.datas.responses.TopicResponse
 import com.mohyeon128.community.datas.responses.UserResponse
+import com.mohyeon128.community.datas.tables.Topic
 import com.mohyeon128.community.datas.tables.User
 import com.mohyeon128.community.services.AuthService
+import com.mohyeon128.community.services.SubscriptionService
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/users")
-class UserController(val authService: AuthService) {
+class UserController(val authService: AuthService, val subscriptionService: SubscriptionService) {
     @PostMapping
     fun regist(@RequestBody userRegistForm: UserRegistForm): ResponseEntity<Boolean> {
         authService.regist(userRegistForm.name, userRegistForm.email, userRegistForm.firebaseUid)
@@ -25,5 +24,12 @@ class UserController(val authService: AuthService) {
         val user: User = authService.get(1)
 
         return ResponseEntity.ok(UserResponse(user))
+    }
+
+    @GetMapping("/{userId}/subscriptions")
+    fun getUserSubscriptions(@PathVariable userId: Long): ResponseEntity<List<TopicResponse>> {
+        return ResponseEntity.ok(subscriptionService.getUserSubscriptions(userId).map {
+            TopicResponse(it)
+        })
     }
 }

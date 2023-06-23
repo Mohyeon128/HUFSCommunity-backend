@@ -7,6 +7,7 @@ import com.mohyeon128.community.datas.tables.Topic
 import com.mohyeon128.community.repositories.PostJpaRepository
 import com.mohyeon128.community.repositories.TopicJpaRepository
 import com.mohyeon128.community.repositories.UserJpaRepository
+import com.mohyeon128.community.services.BroadcastService
 import org.apache.coyote.Response
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -16,11 +17,18 @@ import org.springframework.web.bind.annotation.*
 class PostController(
     val userJpaRepository: UserJpaRepository,
     val postJpaRepository: PostJpaRepository,
-    val topicJpaRepository: TopicJpaRepository
+    val topicJpaRepository: TopicJpaRepository,
+    val broadcastService: BroadcastService
 ) {
     @GetMapping("/{postId}")
     fun getPostById(@PathVariable postId: Int): ResponseEntity<PostResponse> {
         return ResponseEntity.ok(PostResponse(postJpaRepository.findById(postId).get()))
+    }
+
+    @GetMapping("/{postId}/broadcast")
+    fun broadcastPost(@PathVariable postId: Long): ResponseEntity<Boolean> {
+        broadcastService.broadcast(postId)
+        return ResponseEntity.ok(true)
     }
 
     @GetMapping
