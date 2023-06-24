@@ -13,7 +13,7 @@ import java.io.IOException
 class FirebaseConfig {
     @PostConstruct
     fun initialize() {
-        try {
+        /*try {
             val options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.getApplicationDefault())
                 .build()
@@ -22,6 +22,6 @@ class FirebaseConfig {
             println("Firebase SDK initialized.")
         } catch (e: IOException) {
             throw RuntimeException(e)
-        }
+        }*/
     }
 }
