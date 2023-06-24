@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface PostJpaRepository : JpaRepository<Post, Int> {
     fun findByPostId(postId: Long): Post
+
+    fun findByTopicEntitiesInOrderByCreatedAtDesc(topics: List<Topic>): List<Post>
 }

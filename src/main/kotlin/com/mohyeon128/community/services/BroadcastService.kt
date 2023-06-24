@@ -1,9 +1,11 @@
 package com.mohyeon128.community.services
 
+import com.mohyeon128.community.datas.tables.Post
 import com.mohyeon128.community.datas.tables.User
 import com.mohyeon128.community.libs.EmailTemplate
 import com.mohyeon128.community.repositories.PostJpaRepository
 import com.mohyeon128.community.repositories.TopicJpaRepository
+import com.mohyeon128.community.repositories.UserJpaRepository
 import com.mohyeon128.community.repositories.UserTopicSubscriptionJpaRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
@@ -12,8 +14,20 @@ import org.springframework.stereotype.Service
 class BroadcastService(
     val mailService: MailService,
     val postJpaRepository: PostJpaRepository,
-    val subscriptionRepository: UserTopicSubscriptionJpaRepository
+    val subscriptionRepository: UserTopicSubscriptionJpaRepository,
+    val userJpaRepository: UserJpaRepository
 ) {
+
+    @Transactional()
+    fun getUserTimeline(userId: Long): List<Post> {
+        val subscriptions = subscriptionRepository.findByUserId(userId)
+
+        // Extract the topics from the subscriptions
+        val topics = subscriptions.map { it.topic }
+
+        // Find the posts belonging to the topics
+        return postJpaRepository.findByTopicEntitiesInOrderByCreatedAtDesc(topics)
+    }
 
     fun broadcast(postId: Long) {
         // Get the post by its ID
