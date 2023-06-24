@@ -9,6 +9,7 @@ data class PostResponse(
     val createdDate: String,
     val modifiedDate: String,
     val user: UserResponse,
+    val state : String,
     val topics: List<TopicResponse>
 ) {
     constructor(post: Post) : this(
@@ -18,5 +19,6 @@ data class PostResponse(
         post.createdAt.toString(),
         post.updatedAt.toString(),
         UserResponse(post.user!!),
+        post.state,
         post.topicEntities.map { TopicResponse(it) })
 }
